@@ -30,11 +30,12 @@ import requests
 def get_flight_data():
     url = "https://opensky-network.org/api/states/all"
     params = {
-    "lamin": 40.4774,  # Minimum latitude for NYC
-    "lamax": 40.9176,  # Maximum latitude for NYC
-    "lomin": -74.2591, # Minimum longitude for NYC
-    "lomax": -73.7002  # Maximum longitude for NYC
+    "lamin": 41,    # Minimum latitude for the Bay Area
+    "lamax": 42,    # Maximum latitude for the Bay Area
+    "lomin": -88,  # Minimum longitude for the Bay Area
+    "lomax": -87   # Maximum longitude for the Bay Area
 }
+
 
 
     try:
@@ -48,9 +49,32 @@ def get_flight_data():
         print("Error: ", e)
 
 # Example usage:
+
+longs = []
+lats = []
+
 flight_data = get_flight_data()
 if flight_data:
     print("Number of flights tracked:", len(flight_data))
     for flight in flight_data:
-        print("Flight:", flight[0], "Callsign:", flight[1], "Longitude:", flight[5], "Latitude:", flight[6])
+        print("Flight:", flight[0], 
+              "Callsign:", flight[1], 
+              "Longitude:", flight[5], 
+              "Latitude:", flight[6])
+        longs.append(flight[5])
+        lats.append(flight[6])
+
+
+print("Number of flights tracked:", len(flight_data))
+
+st.metric("Number of Flights", len(flight_data))
+
+
+d = {'longitude': longs, 'latitude': lats}
+df = pd.DataFrame(data=d)
+
+st.map(df, color ="#EE4B2B", size=40)
+
+
+
 
