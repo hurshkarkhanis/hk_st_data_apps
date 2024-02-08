@@ -17,7 +17,7 @@ api_key = os.getenv("OPEN_AI_API_KEY")
 llm = OpenAI(api_token=api_key)
 
 st.title("🐼 Pandas AI: Prompt driven analysis")
-uploaded_file = st.file_uploader("💬 Upload CSV file for analysis", type=['csv', 'xlsx'])
+uploaded_file = st.file_uploader("💬 Upload CSV file for analysis", type=['csv', 'xlsx', 'txt'])
 
 if uploaded_file is not None:
     # Read the uploaded CSV file into a Pandas DataFrame
