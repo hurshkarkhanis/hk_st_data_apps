@@ -16,62 +16,30 @@ if api_key is None:
     st.error("API key is missing. Please provide the API key in the .env file.")
     st.stop()
 
-llm = OpenAI(api_token=api_key)
+llm = OpenAI(temperature=0.9, api_token=api_key)
 
 st.title("🐼 Pandas AI: Prompt driven analysis")
-uploaded_file = st.file_uploader("💬 Upload file for analysis", type=['csv', 'xlsx', 'json','sql'])
-
-
-
-
-def read_file(input_file):
-    if input_file.name.endswith('.csv'):
-        return pd.read_csv(input_file)
-    elif input_file.name.endswith('.xlsx'):
-        return pd.read_excel(input_file, engine='openpyxl')
-    elif input_file.name.endswith('.json'):
-        return pd.read_json(input_file)
-    elif input_file.name.endswith('.sql'):
-        # Example for reading from SQL database
-        # return pd.read_sql_query("SELECT * FROM table_name", connection)
-        pass
-    else:
-        raise ValueError("Unsupported file format")
+uploaded_file = st.file_uploader("💬 Upload file for analysis", type=['csv', 'xlsx'])
 
 
 if uploaded_file is not None:
-    try:
-        # Read the uploaded file into a Pandas DataFrame
-        pandas = read_file(uploaded_file)
-        smart_df = SmartDataframe(pandas, config={"llm": llm})
+    # Read the uploaded file into a Pandas DataFrame
+    pandas = pd.read_csv(uploaded_file)
+    smart_df = SmartDataframe(pandas, config={"llm": llm})
 
-        with st.expander("See Full Data"):
-            st.write(pandas)
+    with st.expander("See Full Data"):
+        st.write(pandas)
 
-        prompt_num = 1
-        prompts_outputs = []  # List to store prompts and their corresponding outputs
+    prompt = st.text_area("Enter prompt")
 
-        while True:
-            prompt = st.text_area(f"Enter prompt #{prompt_num}")
-
-            # Display previous prompts and outputs
-            for i, (prev_prompt, output) in enumerate(prompts_outputs):
-                st.write(f"Input {i+1}: {prev_prompt}")
-                st.write(f"Output {i+1}: {output}")
-
-            button_key = f"generate_button_{prompt_num}"  # Unique key for each button
-            if st.button("Generate", key=button_key):
-                if prompt:
-                    # Show spinner while processing
-                    with st.spinner("Generating..."):
-                        output = smart_df.chat(prompt)
-                        prompts_outputs.append((prompt, output))
-                    # Hide spinner when done
-                    st.success("Generated!")
-                    prompt_num += 1
-                else:
-                    st.warning("Please enter a prompt")
-            else:
-                break
-    except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
+    if st.button("Generate"):
+        if prompt:
+            # Show spinner while processing
+            with st.spinner("Generating..."):
+                output = smart_df.chat(prompt)    
+            # Hide spinner when done
+            st.success("Generated!")
+            st.write(output)
+        else:
+            st.warning("Please enter a prompt")
+    
