@@ -1,8 +1,8 @@
-# Ignore environment files
+# Ignore all environment files
 .env
 
-# Ignore SQLite Write-Ahead Log (.wal) files
+# Ignore all SQLite Write-Ahead Log (.wal) files
 *.wal
 
-# Ignore SQLite database files
+# Ignore all SQLite database files
 *.db
