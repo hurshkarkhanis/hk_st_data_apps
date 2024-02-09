@@ -1,32 +1,23 @@
+import pandas as pd
+from langchain.llms import OpenAI
 import streamlit as st
 
-def read_text_file(uploaded_file):
-    content = uploaded_file.getvalue().decode("utf-8")
-    return content
+from dotenv import load_dotenv
+import os
 
-def chatbot(question, text_content):
-    responses = {
-        "What is in the file?": text_content,
-        "How many lines are in the file?": f"The file contains {len(text_content.splitlines())} lines.",
-        # Add more predefined responses here
-    }
-    return responses.get(question, "I'm sorry, I don't understand that question.")
+st.title('🦜🔗 Quickstart App')
 
-# Streamlit UI
-st.title("Text File Chatbot")
+load_dotenv()
+openai_api_key = os.getenv("OPEN_AI_API_KEY")
 
-uploaded_file = st.file_uploader("Upload text file", type=['txt'])
+def generate_response(input_text):
+    llm = OpenAI(temperature=0.7, openai_api_key=openai_api_key)
+    st.info(llm(input_text))
 
-if uploaded_file is not None:
-    text_content = read_text_file(uploaded_file)
-    st.write("Text content:")
-    st.write(text_content)
-
-    question = st.text_input("Ask a question")
-    if st.button("Ask"):
-        if question:
-            response = chatbot(question, text_content)
-            st.write("Chatbot's response:")
-            st.write(response)
-        else:
-            st.warning("Please enter a question.")
+with st.form('my_form'):
+    text = st.text_area('Enter text:', 'What are the three key pieces of advice for learning how to code?')
+    submitted = st.form_submit_button('Submit')
+    if not openai_api_key.startswith('sk-'):
+        st.warning('Please enter your OpenAI API key!', icon='⚠')
+    if submitted and openai_api_key.startswith('sk-'):
+        generate_response(text)
