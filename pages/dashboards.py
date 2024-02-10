@@ -3,6 +3,10 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import altair as alt
 
+
+st.title("📊 Dashboards (in progress)")
+st.caption("Connecting to Google Sheets and/or requestds APIs to vizualize live data")
+
 # Define the Google Sheets URL
 url = "https://docs.google.com/spreadsheets/d/1vW1qzYSqPyWxZAyraNM83V8AzPotnOlfXT35ZbvfnfE/edit?usp=sharing"
 
@@ -30,11 +34,12 @@ import requests
 def get_flight_data():
     url = "https://opensky-network.org/api/states/all"
     params = {
-    "lamin": 41,    # Minimum latitude for the Bay Area
-    "lamax": 42,    # Maximum latitude for the Bay Area
-    "lomin": -88,  # Minimum longitude for the Bay Area
-    "lomax": -87   # Maximum longitude for the Bay Area
-}
+        "lamin": 51.4,    # Lower latitude bound for London
+        "lamax": 51.6,    # Upper latitude bound for London
+        "lomin": -0.3,    # Lower longitude bound for London
+        "lomax": 0.3      # Upper longitude bound for London
+    }
+
 
 
 

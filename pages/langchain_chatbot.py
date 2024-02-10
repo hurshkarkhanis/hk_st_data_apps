@@ -5,7 +5,9 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 
-st.title('🦜🔗 Quickstart App')
+st.title('🦜🔗 LangChain Chatbot (in progress)')
+
+st.caption("using Langchain to create text based chatbot")
 
 load_dotenv()
 openai_api_key = os.getenv("OPEN_AI_API_KEY")

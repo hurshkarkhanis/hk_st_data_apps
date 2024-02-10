@@ -18,13 +18,13 @@ if api_key is None:
 
 llm = OpenAI(temperature=0.9, api_token=api_key)
 
-st.title("🐼 Pandas AI: Prompt driven analysis")
-uploaded_file = st.file_uploader("💬 Upload file for analysis", type=['json'])
+st.title("🐼 Pandas AI: Query CSV in natural language (in progress)")
+uploaded_file = st.file_uploader("💬 Upload file for analysis", type=['csv'])
 
 
 if uploaded_file is not None:
     # Read the uploaded file into a Pandas DataFrame
-    pandas = pd.read_json(uploaded_file, orient="records")
+    pandas = pd.read_csv(uploaded_file)
     smart_df = SmartDataframe(pandas, config={"llm": llm})
 
     with st.expander("See Full Data"):
