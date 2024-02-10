@@ -34,11 +34,12 @@ import requests
 def get_flight_data():
     url = "https://opensky-network.org/api/states/all"
     params = {
-        "lamin": 51.4,    # Lower latitude bound for London
-        "lamax": 51.6,    # Upper latitude bound for London
-        "lomin": -0.3,    # Lower longitude bound for London
-        "lomax": 0.3      # Upper longitude bound for London
+        "lamin": 24.396308,   # Lower latitude bound for Florida
+        "lamax": 31.001056,   # Upper latitude bound for Florida
+        "lomin": -87.634819,  # Lower longitude bound for Florida
+        "lomax": -79.974307   # Upper longitude bound for Florida
     }
+
 
 
 
