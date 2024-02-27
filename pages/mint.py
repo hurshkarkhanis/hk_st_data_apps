@@ -1,50 +1,57 @@
 import streamlit as st
 import pandas as pd
+from streamlit_gsheets import GSheetsConnection
+from pandasql import sqldf
 
-import random as rand
+import pandasql as ps
 
-# Sample DataFrame (Replace this with your actual dataset)
-# Sample DataFrame with consistent lengths
+st.title("📗 Mint")
 
+url = "https://docs.google.com/spreadsheets/d/1n-hcvcfR4yMxqcolyOq2rBauGH1nFtCkWYYZgUgyEDs/edit?usp=sharing"
 
-data = {
-    'Date': pd.date_range(start='2022-01-01', end='2022-01-27', freq='D'),
-    'Descrip': ["hursh" for _ in range(1, 28)],
-    'Category': ['Investing', 'Housing', 'Gym'] * 9,  # Adjust the length of Category
-    'Amount': [rand.randint(1, 100) for _ in range(27)],
-    'Notes': ["hursh" for _ in range(1, 28)]
-}
+conn = st.connection("gsheets", type=GSheetsConnection)
 
-df = pd.DataFrame(data)
+# Read data from Google Sheets
+google_data = conn.read(spreadsheet=url, usecols=[0, 1, 2, 3])
 
+st.title("Google Sheet")
+st.write(google_data)
 
+pandas_data = pd.DataFrame(google_data)
 
+st.title("PandasDF")
 
+st.write(pandas_data)
 
-df = pd.DataFrame(data)
+#====================
 
-# Sidebar filters
+st.title("asking user to filter")
 
-st.header('Filters')
+start_date = st.date_input("Select start date")
+end_date = st.date_input("Select end date")
 
-start_date = st.date_input("Start Date", min_value=df['Date'].min().date(), max_value=df['Date'].max().date(), value=df['Date'].min().date())
-end_date = st.date_input("End Date", min_value=df['Date'].min().date(), max_value=df['Date'].max().date(), value=df['Date'].max().date())
-selected_categories = st.multiselect('Select Categories', df['Category'].unique())
+# Convert selected dates to the format in DataFrame
+start_date_str = start_date.strftime("%m/%d/%y")
+end_date_str = end_date.strftime("%m/%d/%y")
 
-# Apply filters
-filtered_df = df[(df['Date'] >= pd.Timestamp(start_date)) & (df['Date'] <= pd.Timestamp(end_date))]
-if selected_categories:
-    filtered_df = filtered_df[filtered_df['Category'].isin(selected_categories)]
+print(start_date, type(start_date))
+print(end_date, type(end_date))
 
-# Data
-with st.expander("See Full Data"):
-        st.write(filtered_df)
+print("-----")
 
 
-# Chart
-st.header('Chart')
-if not filtered_df.empty:
-    filtered_chart_data = filtered_df.groupby('Date')['Amount'].sum()
-    st.bar_chart(filtered_chart_data)
-else:
-    st.write('No data available for the selected filters.')
+print(start_date_str, type(start_date_str))
+
+print(end_date_str, type(end_date_str))
+
+
+# Filter dates between the time frame
+
+filtered_df = pandas_data[pandas_data['Date'] > '1/7/24']
+
+st.title("Filtered")
+
+st.write(filtered_df)
+
+
+

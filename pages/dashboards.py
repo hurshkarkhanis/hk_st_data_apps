@@ -28,6 +28,8 @@ chart = alt.Chart(data).mark_line().encode(
 # Display the line chart
 st.altair_chart(chart, use_container_width=True)  # Adjust to fit container width
 
+######
+
 
 import requests
 
